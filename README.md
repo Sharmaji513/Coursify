@@ -4,4 +4,5 @@
  - Add Express, jsonwebtoken, mongoose to it as a dependency 
  - Added Skelton Routes
  - Added User, Admin , Course Router
- - Add dotenv for environment variables 
+ - Added dotenv for environment variables 
+ - Added userModel , adminModel , courseModel , purchaseModel
