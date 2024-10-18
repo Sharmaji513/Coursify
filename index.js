@@ -1,36 +1,13 @@
-const express = require('express')
+const express = require("express");
+const { userRouter } = require("./routes/user");
 
-const app = express()
+const app = express();
 
-const PORT = 3000
-
-
-app.post("/user/signup", (req, res) => {
-    res.json({
-        message: "signup endpoint"
-    })
-})
-
-app.post('/user/signin' ,(req,res)=>{
-    res.json({
-        message: "signin endpoint"
-    })
-} )
-
-app.get("/user/purchases", function(req, res) {
-    res.json({
-        message: "purchases endpoint"
-    })
-})
-
-app.get("/courses", function(req, res) {
-    res.json({
-        message: "courses endpoint"
-    })
-})
+const PORT = 3000;
 
 
-app.listen(PORT, ()=>{
- console.log(`Server listening at  ${PORT}`);
- 
-})
+app.use("/api/v1/user", userRouter);
+
+app.listen(PORT, () => {
+  console.log(`Server listening at  ${PORT}`);
+});
