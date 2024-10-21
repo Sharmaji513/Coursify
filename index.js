@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const app = express();
+app.use(express.json());
+
 const PORT = process.env.PORT || 5000;
 
 // Import routers
@@ -26,7 +28,7 @@ async function main() {
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit the process with a failure code if unable to connect
+    process.exit(1); 
   }
 }
 
