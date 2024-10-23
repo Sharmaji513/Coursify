@@ -2,8 +2,10 @@ const { Router } = require("express");
 const userModel = require("../models/userModel");
 const userRouter = Router();
 const jwt = require("jsonwebtoken");
+const { userMiddleware } = require("../middlewares/user");
+const courseModel = require("../models/courseModel");
 
-const SECRET_KEY = process.env.JWT_ADMIN_PASSWORD || "asdsdfgfgrtr";
+const USER_SECRET_KEY = process.env.JWT_USER_PASSWORD ;
 
     userRouter.post("/signup", async (req, res) => {
         try {
@@ -24,6 +26,8 @@ const SECRET_KEY = process.env.JWT_ADMIN_PASSWORD || "asdsdfgfgrtr";
         }
     });
 
+
+
     userRouter.post("/signin", async (req, res) => {
 
         try {
@@ -39,7 +43,7 @@ const SECRET_KEY = process.env.JWT_ADMIN_PASSWORD || "asdsdfgfgrtr";
                 {
                     id: admin._id,
                 },
-                SECRET_KEY
+                USER_SECRET_KEY
                 );
         
                 res.json({
@@ -57,11 +61,28 @@ const SECRET_KEY = process.env.JWT_ADMIN_PASSWORD || "asdsdfgfgrtr";
 
     });
 
+    //Purchasws
+    userRouter.get("/purchases", userMiddleware ,async function (req, res) {
+        const userId = req.userId;
+
+        const purchases = await purchaseModel.find({
+            userId,
+        });
     
-    userRouter.get("/purchases", function (req, res) {
-    res.json({
-        message: "purchases endpoint",
-    });
+        let purchasedCourseIds = [];
+    
+        for (let i = 0; i<purchases.length;i++){ 
+            purchasedCourseIds.push(purchases[i].courseId)
+        }
+    
+        const coursesData = await courseModel.find({
+            _id: { $in: purchasedCourseIds }
+        })
+    
+        res.json({
+            purchases,
+            coursesData
+        })
     });
 
 module.exports = {

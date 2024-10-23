@@ -6,3 +6,5 @@
  - Added User, Admin , Course Router
  - Added dotenv for environment variables 
  - Added userModel , adminModel , courseModel , purchaseModel
+ - Add middlewares for user and admin auth
+ - Complete the routes for admin and user routes 
