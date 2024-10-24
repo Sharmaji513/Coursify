@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const { Router } = require("express");
 const adminModel = require("../models/adminModel");
 const courseModel = require("../models/courseModel");
@@ -12,10 +13,11 @@ const SECRET_KEY = process.env.JWT_ADMIN_PASSWORD || "asdsdfgfgrtr";
 adminRouter.post("/signup", async (req, res) => {
   try {
     const { email, password, firstName, lastName } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     await adminModel.create({
       email,
-      password,
+      password: hashedPassword,
       firstName,
       lastName,
     });
@@ -33,28 +35,21 @@ adminRouter.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const admin = await adminModel.findOne({
-      email,
-      password,
-    });
+    const admin = await adminModel.findOne({email});
 
-    if (admin) {
-      const token = jwt.sign(
-        {
-          id: admin._id,
-        },
-        SECRET_KEY
-      );
+    if (admin && await bcrypt.compare(password , admin.password)) {
+      const token = jwt.sign({id: admin._id}, SECRET_KEY , {expiresIn: "1h"});
 
       res.json({
         token: token,
       });
+
     } else {
       res.status(403).json({
         message: "incorrect credentials",
       });
     }
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
@@ -128,8 +123,8 @@ adminRouter.get("/courses", adminMiddleware, async (req, res) => {
       message: "Courses retrieved successfully",
       courses,
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

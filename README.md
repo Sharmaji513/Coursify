@@ -8,3 +8,4 @@
  - Added userModel , adminModel , courseModel , purchaseModel
  - Add middlewares for user and admin auth
  - Complete the routes for admin and user routes 
+ - Encription passwords using bcyrpt
