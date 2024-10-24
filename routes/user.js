@@ -5,6 +5,7 @@ const userRouter = Router();
 const jwt = require("jsonwebtoken");
 const { userMiddleware } = require("../middlewares/user");
 const courseModel = require("../models/courseModel");
+const purchaseModel = require("../models/purchaseModel");
 
 const USER_SECRET_KEY = process.env.JWT_USER_PASSWORD;
 
